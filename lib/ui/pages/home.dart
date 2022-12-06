@@ -15,15 +15,44 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
   late TabController _tabController;
   final MobxModelView vm = MobxModelView();
 
+  List<Tab> tabsList = [
+    Tab(
+      child: Text(
+        "Now Playing",
+        textAlign: TextAlign.center,
+        style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600),
+      ),
+    ),
+    Tab(
+      child: Text(
+        "Upcoming",
+        textAlign: TextAlign.center,
+        style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600),
+      ),
+    ),
+    Tab(
+      child: Text(
+        "Top rated",
+        textAlign: TextAlign.center,
+        style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600),
+      ),
+    ),
+    Tab(
+      child: Text(
+        "Popular",
+        textAlign: TextAlign.center,
+        style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w600),
+      ),
+    ),
+  ];
+
   @override
   void initState() {
     vm.getPopularMovies();
     vm.getNowPlayingMovies();
+    vm.getUpComingMovies();
     super.initState();
-    _tabController = TabController(
-        length: 4,
-        vsync: this,
-        animationDuration: const Duration(milliseconds: 500));
+    _tabController = TabController(length: 4, vsync: this, animationDuration: const Duration(milliseconds: 500));
   }
 
   @override
@@ -46,10 +75,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 ),
                 Text(
                   "Welcome!",
-                  style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w500),
+                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.w500),
                 ),
                 const Spacer(),
               ],
@@ -73,8 +99,9 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                             width: 36.w,
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: NetworkImage(
-                                        "https://image.tmdb.org/t/p/original/${vm.popularMovies!.results![index].backdropPath}"),
+                                    image: NetworkImage(vm.popularMovies!.results!.isNotEmpty
+                                        ? "https://image.tmdb.org/t/p/original/${vm.popularMovies!.results![index].backdropPath}"
+                                        : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.majestik.gen.tr%2Fedremit-mobilya-2%2Fmobilya-renk-kartelasi%2Fduz-mobilya-renkleri.html&psig=AOvVaw1nlrgIg_Xug3n_fo7ERikf&ust=1670399105938000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCOCmmL7A5PsCFQAAAAAdAAAAABAM"),
                                     fit: BoxFit.cover),
                                 borderRadius: BorderRadius.circular(20.sp)),
                           );
@@ -87,79 +114,148 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
             ),
             SizedBox(
               width: 100.w,
-              child: TabBar(controller: _tabController, tabs: <Tab>[
-                Tab(
-                  child: Text(
-                    "Now Playing",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                        fontSize: 12, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    "Upcoming",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                        fontSize: 12, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    "Top rated",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                        fontSize: 12, fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Tab(
-                  child: Text(
-                    "Popular",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.poppins(
-                        fontSize: 12, fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ]),
+              child: TabBar(
+                controller: _tabController,
+                tabs: tabsList,
+                onTap: (value) => vm.getTopRatedMovies(value),
+              ),
             ),
             SizedBox(
               height: 36.h,
               child: GridView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                ),
-                itemCount: 20,
-                itemBuilder: (context, index) {
-                  return Observer(builder: (_) {
-                    return vm.isLoadingNowPlayingMovies
-                        ? const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(40),
-                              child: CircularProgressIndicator(
-                                color: Colors.grey,
-                              ),
-                            ),
-                          )
-                        : Container(
-                            margin: EdgeInsets.only(
-                              left: 5.w,
-                            ),
-                            width: 20.w,
-                            height: 18.h,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(
-                                        "https://image.tmdb.org/t/p/original/${vm.nowPlayingMovies!.results![index].backdropPath}"),
-                                    fit: BoxFit.cover),
-                                borderRadius: BorderRadius.circular(20.sp)),
-                          );
-                  });
-                },
-              ),
-            )
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  physics: const BouncingScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                  ),
+                  itemCount: 20,
+                  /* vm.tabsIndex == 0
+                          ? vm.nowPlayingMovies!.results!.isNotEmpty
+                              ? vm.nowPlayingMovies!.results!.length
+                              : 10
+                          : vm.tabsIndex == 1
+                              ? vm.upComingMovies!.results!.isNotEmpty
+                                  ? vm.upComingMovies!.results!.length
+                                  : 10
+                              : vm.tabsIndex == 2
+                                  ? vm.topRatedMovies!.results!.isNotEmpty
+                                      ? vm.topRatedMovies!.results!.length
+                                      : 10
+                                  : vm.tabsIndex == 3
+                                      ? vm.popularMovies!.results!.isNotEmpty
+                                          ? vm.popularMovies!.results!.length
+                                          : 10
+                                      : 10, */
+                  itemBuilder: (context, index) {
+                    return Observer(builder: (_) {
+                      return vm.tabsIndex == 0
+                          ? vm.isLoadingNowPlayingMovies
+                              ? const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(40),
+                                    child: CircularProgressIndicator(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                )
+                              : Container(
+                                  margin: EdgeInsets.only(
+                                    left: 5.w,
+                                  ),
+                                  width: 20.w,
+                                  height: 18.h,
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: NetworkImage(vm.nowPlayingMovies!.results!.isNotEmpty
+                                              ? "https://image.tmdb.org/t/p/original/${vm.nowPlayingMovies!.results![index].backdropPath}"
+                                              : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.majestik.gen.tr%2Fedremit-mobilya-2%2Fmobilya-renk-kartelasi%2Fduz-mobilya-renkleri.html&psig=AOvVaw1nlrgIg_Xug3n_fo7ERikf&ust=1670399105938000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCOCmmL7A5PsCFQAAAAAdAAAAABAM"),
+                                          fit: BoxFit.cover),
+                                      borderRadius: BorderRadius.circular(20.sp)),
+                                )
+                          : vm.tabsIndex == 1
+                              ? vm.isLoadingUpComingMovies
+                                  ? const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(40),
+                                        child: CircularProgressIndicator(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    )
+                                  : Container(
+                                      margin: EdgeInsets.only(
+                                        left: 5.w,
+                                      ),
+                                      width: 20.w,
+                                      height: 18.h,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage(vm.upComingMovies!.results!.isNotEmpty
+                                                  ? "https://image.tmdb.org/t/p/original/${vm.upComingMovies!.results![index].backdropPath}"
+                                                  : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.majestik.gen.tr%2Fedremit-mobilya-2%2Fmobilya-renk-kartelasi%2Fduz-mobilya-renkleri.html&psig=AOvVaw1nlrgIg_Xug3n_fo7ERikf&ust=1670399105938000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCOCmmL7A5PsCFQAAAAAdAAAAABAM"),
+                                              fit: BoxFit.cover),
+                                          borderRadius: BorderRadius.circular(20.sp)),
+                                    )
+                              : vm.tabsIndex == 2
+                                  ? vm.isLoadingTopRatedMovies
+                                      ? const Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(40),
+                                            child: CircularProgressIndicator(
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                        )
+                                      : Container(
+                                          margin: EdgeInsets.only(
+                                            left: 5.w,
+                                          ),
+                                          width: 20.w,
+                                          height: 18.h,
+                                          decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                  image: NetworkImage(vm.topRatedMovies!.results!.isNotEmpty
+                                                      ? "https://image.tmdb.org/t/p/original/${vm.topRatedMovies!.results![index].backdropPath}"
+                                                      : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.majestik.gen.tr%2Fedremit-mobilya-2%2Fmobilya-renk-kartelasi%2Fduz-mobilya-renkleri.html&psig=AOvVaw1nlrgIg_Xug3n_fo7ERikf&ust=1670399105938000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCOCmmL7A5PsCFQAAAAAdAAAAABAM"),
+                                                  fit: BoxFit.cover),
+                                              borderRadius: BorderRadius.circular(20.sp)),
+                                        )
+                                  : vm.tabsIndex == 3
+                                      ? vm.isLoadingPopularMovies
+                                          ? const Center(
+                                              child: Padding(
+                                                padding: EdgeInsets.all(40),
+                                                child: CircularProgressIndicator(
+                                                  color: Colors.grey,
+                                                ),
+                                              ),
+                                            )
+                                          : Container(
+                                              margin: EdgeInsets.only(
+                                                left: 5.w,
+                                              ),
+                                              width: 20.w,
+                                              height: 18.h,
+                                              decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                      image: NetworkImage(vm.popularMovies!.results!.isNotEmpty
+                                                          ? "https://image.tmdb.org/t/p/original/${vm.popularMovies!.results![index].backdropPath}"
+                                                          : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.majestik.gen.tr%2Fedremit-mobilya-2%2Fmobilya-renk-kartelasi%2Fduz-mobilya-renkleri.html&psig=AOvVaw1nlrgIg_Xug3n_fo7ERikf&ust=1670399105938000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCOCmmL7A5PsCFQAAAAAdAAAAABAM"),
+                                                      fit: BoxFit.cover),
+                                                  borderRadius: BorderRadius.circular(20.sp)),
+                                            )
+                                      : Container(
+                                          margin: EdgeInsets.only(
+                                            left: 5.w,
+                                          ),
+                                          width: 20.w,
+                                          height: 18.h,
+                                          decoration: BoxDecoration(color: Colors.grey, borderRadius: BorderRadius.circular(20.sp)),
+                                        );
+                    });
+                  }),
+            ),
           ]),
         ),
       ),

@@ -1,6 +1,8 @@
 import 'package:mobx/mobx.dart';
 import 'package:movie_app/models/now_playing_movies_model.dart';
 import 'package:movie_app/models/popular_movies_model.dart';
+import 'package:movie_app/models/top_rated_movies_model.dart';
+import 'package:movie_app/models/upcoming_movies_model.dart';
 import 'package:movie_app/services/general_services.dart';
 part 'mobx_viewmodel.g.dart';
 
@@ -39,5 +41,34 @@ abstract class _MobxModelViewBase with Store {
     isLoadingNowPlayingMovies = true;
     nowPlayingMovies = await GeneralServices().getNowPlayingMovies();
     isLoadingNowPlayingMovies = false;
+  }
+
+  //UpComing Movies
+  @observable
+  UpComingMoviesModel? upComingMovies;
+  @observable
+  bool isLoadingUpComingMovies = true;
+
+  @action
+  getUpComingMovies() async {
+    isLoadingUpComingMovies = true;
+    upComingMovies = await GeneralServices().getUpComingMovies();
+    isLoadingUpComingMovies = false;
+  }
+
+  //TopRated Movies
+  @observable
+  TopRatedMoviesModel? topRatedMovies;
+  @observable
+  bool isLoadingTopRatedMovies = true;
+  @observable
+  int tabsIndex = 0;
+
+  @action
+  getTopRatedMovies(int value) async {
+    tabsIndex = value;
+    isLoadingTopRatedMovies = true;
+    topRatedMovies = await GeneralServices().getTopRatedMovies();
+    isLoadingTopRatedMovies = false;
   }
 }

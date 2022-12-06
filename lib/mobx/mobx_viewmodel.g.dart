@@ -91,6 +91,88 @@ mixin _$MobxModelView on _MobxModelViewBase, Store {
     });
   }
 
+  late final _$upComingMoviesAtom =
+      Atom(name: '_MobxModelViewBase.upComingMovies', context: context);
+
+  @override
+  UpComingMoviesModel? get upComingMovies {
+    _$upComingMoviesAtom.reportRead();
+    return super.upComingMovies;
+  }
+
+  @override
+  set upComingMovies(UpComingMoviesModel? value) {
+    _$upComingMoviesAtom.reportWrite(value, super.upComingMovies, () {
+      super.upComingMovies = value;
+    });
+  }
+
+  late final _$isLoadingUpComingMoviesAtom = Atom(
+      name: '_MobxModelViewBase.isLoadingUpComingMovies', context: context);
+
+  @override
+  bool get isLoadingUpComingMovies {
+    _$isLoadingUpComingMoviesAtom.reportRead();
+    return super.isLoadingUpComingMovies;
+  }
+
+  @override
+  set isLoadingUpComingMovies(bool value) {
+    _$isLoadingUpComingMoviesAtom
+        .reportWrite(value, super.isLoadingUpComingMovies, () {
+      super.isLoadingUpComingMovies = value;
+    });
+  }
+
+  late final _$topRatedMoviesAtom =
+      Atom(name: '_MobxModelViewBase.topRatedMovies', context: context);
+
+  @override
+  TopRatedMoviesModel? get topRatedMovies {
+    _$topRatedMoviesAtom.reportRead();
+    return super.topRatedMovies;
+  }
+
+  @override
+  set topRatedMovies(TopRatedMoviesModel? value) {
+    _$topRatedMoviesAtom.reportWrite(value, super.topRatedMovies, () {
+      super.topRatedMovies = value;
+    });
+  }
+
+  late final _$isLoadingTopRatedMoviesAtom = Atom(
+      name: '_MobxModelViewBase.isLoadingTopRatedMovies', context: context);
+
+  @override
+  bool get isLoadingTopRatedMovies {
+    _$isLoadingTopRatedMoviesAtom.reportRead();
+    return super.isLoadingTopRatedMovies;
+  }
+
+  @override
+  set isLoadingTopRatedMovies(bool value) {
+    _$isLoadingTopRatedMoviesAtom
+        .reportWrite(value, super.isLoadingTopRatedMovies, () {
+      super.isLoadingTopRatedMovies = value;
+    });
+  }
+
+  late final _$tabsIndexAtom =
+      Atom(name: '_MobxModelViewBase.tabsIndex', context: context);
+
+  @override
+  int get tabsIndex {
+    _$tabsIndexAtom.reportRead();
+    return super.tabsIndex;
+  }
+
+  @override
+  set tabsIndex(int value) {
+    _$tabsIndexAtom.reportWrite(value, super.tabsIndex, () {
+      super.tabsIndex = value;
+    });
+  }
+
   late final _$getPopularMoviesAsyncAction =
       AsyncAction('_MobxModelViewBase.getPopularMovies', context: context);
 
@@ -106,6 +188,23 @@ mixin _$MobxModelView on _MobxModelViewBase, Store {
   Future getNowPlayingMovies() {
     return _$getNowPlayingMoviesAsyncAction
         .run(() => super.getNowPlayingMovies());
+  }
+
+  late final _$getUpComingMoviesAsyncAction =
+      AsyncAction('_MobxModelViewBase.getUpComingMovies', context: context);
+
+  @override
+  Future getUpComingMovies() {
+    return _$getUpComingMoviesAsyncAction.run(() => super.getUpComingMovies());
+  }
+
+  late final _$getTopRatedMoviesAsyncAction =
+      AsyncAction('_MobxModelViewBase.getTopRatedMovies', context: context);
+
+  @override
+  Future getTopRatedMovies(int value) {
+    return _$getTopRatedMoviesAsyncAction
+        .run(() => super.getTopRatedMovies(value));
   }
 
   late final _$_MobxModelViewBaseActionController =
@@ -129,7 +228,12 @@ selectedIndex: ${selectedIndex},
 popularMovies: ${popularMovies},
 isLoadingPopularMovies: ${isLoadingPopularMovies},
 nowPlayingMovies: ${nowPlayingMovies},
-isLoadingNowPlayingMovies: ${isLoadingNowPlayingMovies}
+isLoadingNowPlayingMovies: ${isLoadingNowPlayingMovies},
+upComingMovies: ${upComingMovies},
+isLoadingUpComingMovies: ${isLoadingUpComingMovies},
+topRatedMovies: ${topRatedMovies},
+isLoadingTopRatedMovies: ${isLoadingTopRatedMovies},
+tabsIndex: ${tabsIndex}
     ''';
   }
 }
