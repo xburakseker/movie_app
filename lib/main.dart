@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_app/ui/pages/movies_detail.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 import 'bottom_nav_bar.dart';

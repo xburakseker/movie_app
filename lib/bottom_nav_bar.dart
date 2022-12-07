@@ -17,6 +17,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: vm.key,
       resizeToAvoidBottomInset: false,
       body: Observer(builder: (_) {
         return Center(child: pages[vm.selectedIndex]);
@@ -30,12 +31,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
               selectedIconTheme: const IconThemeData(color: Colors.white),
               backgroundColor: Colors.black,
               items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.home_outlined), label: 'Home'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.search), label: 'Search'),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.save_rounded), label: 'Watch List'),
+                BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: 'Home'),
+                BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
+                BottomNavigationBarItem(icon: Icon(Icons.save_rounded), label: 'Watch List'),
               ]);
         },
       ),

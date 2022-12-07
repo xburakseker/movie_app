@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:movie_app/models/now_playing_movies_model.dart';
 import 'package:movie_app/models/popular_movies_model.dart';
@@ -24,11 +26,13 @@ abstract class _MobxModelViewBase with Store {
   bool isLoadingPopularMovies = true;
 
   @action
-  getPopularMovies() async {
+  getPopularMovies(BuildContext context) async {
     isLoadingPopularMovies = true;
-    popularMovies = await GeneralServices().getPopularMovies();
+    popularMovies = await GeneralServices().getPopularMovies(context);
     isLoadingPopularMovies = false;
   }
+
+  GlobalKey<ScaffoldState> key = GlobalKey();
 
   //NowPlaying Movies
   @observable

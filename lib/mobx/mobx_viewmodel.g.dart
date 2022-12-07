@@ -177,8 +177,9 @@ mixin _$MobxModelView on _MobxModelViewBase, Store {
       AsyncAction('_MobxModelViewBase.getPopularMovies', context: context);
 
   @override
-  Future getPopularMovies() {
-    return _$getPopularMoviesAsyncAction.run(() => super.getPopularMovies());
+  Future getPopularMovies(BuildContext context) {
+    return _$getPopularMoviesAsyncAction
+        .run(() => super.getPopularMovies(context));
   }
 
   late final _$getNowPlayingMoviesAsyncAction =

@@ -48,7 +48,7 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    vm.getPopularMovies();
+    vm.getPopularMovies(context);
     vm.getNowPlayingMovies();
     vm.getUpComingMovies();
     super.initState();
@@ -92,19 +92,21 @@ class _HomeState extends State<Home> with TickerProviderStateMixin {
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return Observer(builder: (_) {
-                    return vm.isLoadingPopularMovies
-                        ? const CircularProgressIndicator()
-                        : Container(
-                            margin: EdgeInsets.only(left: 5.w),
-                            width: 36.w,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    image: NetworkImage(vm.popularMovies!.results!.isNotEmpty
-                                        ? "https://image.tmdb.org/t/p/original/${vm.popularMovies!.results![index].backdropPath}"
-                                        : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.majestik.gen.tr%2Fedremit-mobilya-2%2Fmobilya-renk-kartelasi%2Fduz-mobilya-renkleri.html&psig=AOvVaw1nlrgIg_Xug3n_fo7ERikf&ust=1670399105938000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCOCmmL7A5PsCFQAAAAAdAAAAABAM"),
-                                    fit: BoxFit.cover),
-                                borderRadius: BorderRadius.circular(20.sp)),
-                          );
+                    if (vm.isLoadingPopularMovies == false && vm.popularMovies!.errorMessage!.isEmpty) {
+                      return Container(
+                        margin: EdgeInsets.only(left: 5.w),
+                        width: 36.w,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(vm.popularMovies!.results!.isNotEmpty
+                                    ? "https://image.tmdb.org/t/p/original/${vm.popularMovies!.results![index].backdropPath}"
+                                    : "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.majestik.gen.tr%2Fedremit-mobilya-2%2Fmobilya-renk-kartelasi%2Fduz-mobilya-renkleri.html&psig=AOvVaw1nlrgIg_Xug3n_fo7ERikf&ust=1670399105938000&source=images&cd=vfe&ved=0CA8QjRxqFwoTCOCmmL7A5PsCFQAAAAAdAAAAABAM"),
+                                fit: BoxFit.cover),
+                            borderRadius: BorderRadius.circular(20.sp)),
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
                   });
                 },
               ),

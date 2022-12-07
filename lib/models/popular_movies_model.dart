@@ -3,9 +3,9 @@ class PopularMoviesModel {
   List<Results>? results;
   dynamic totalPages;
   dynamic totalResults;
+  String? errorMessage;
 
-  PopularMoviesModel(
-      {this.page, this.results, this.totalPages, this.totalResults});
+  PopularMoviesModel({this.page, this.results, this.totalPages, this.totalResults, this.errorMessage});
 
   PopularMoviesModel.fromJson(Map<String, dynamic> json) {
     page = json['page'];
